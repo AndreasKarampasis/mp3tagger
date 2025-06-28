@@ -1,23 +1,13 @@
 import os
 import csv
 import argparse
+from argparse import RawTextHelpFormatter
 from mutagen.easyid3 import EasyID3
 
-def list_mp3_files(folder_path:str):
-    """
-    List all MP3 files in the given folder.
-    :param folder_path: Path to the folder to scan.
-    :return:
-    """
+def list_mp3_files(folder_path):
     return [f for f in os.listdir(folder_path) if f.lower().endswith('.mp3')]
 
-def export_metadata(folder_path: str, output_csv: str):
-    """
-    Export metadata (title, artist, album) of all MP3 files in a folder to a CSV file.
-
-    :param folder_path: Path to the folder containing MP3 files.
-    :param output_csv: Path to the CSV file to write metadata into.
-    """
+def export_metadata(folder_path, output_csv):
     mp3_files = list_mp3_files(folder_path)
     with open(output_csv, mode="w", newline='', encoding="utf-8") as f:
         writer = csv.writer(f)
@@ -31,21 +21,13 @@ def export_metadata(folder_path: str, output_csv: str):
                     audio.get("title", [""])[0],
                     audio.get("artist", [""])[0],
                     audio.get("album", [""])[0]
-                ])
+                    ])
                 print(f"✅ Exported: {filename}")
             except Exception as e:
                 print(f"⚠️ Could not read {filename}: {e}")
                 writer.writerow([filename, "", "", ""])
 
-
-def import_metadata(folder_path:str, input_csv:str):
-    """
-    Import metadata from a CSV file and update MP3 files' ID3 tags accordingly.
-
-    :param folder_path: Path to the folder containing MP3 files.
-    :param input_csv: Path to the CSV file with metadata to import.
-    :return:
-    """
+def import_metadata(folder_path, input_csv):
     with open(input_csv, mode="r", newline='', encoding="utf-8") as f:
         reader = csv.DictReader(f)
         for row in reader:
@@ -66,8 +48,17 @@ def import_metadata(folder_path:str, input_csv:str):
 
 def main():
     parser = argparse.ArgumentParser(
-        description="MP3 Metadata Tool (UTF-8 safe, ideal for Greek text)"
-    )
+            prog="mp3meta",
+            description=(
+                "MP3 Metadata Tool (UTF-8 safe, ideal for Greek or multilingual text)\n\n"
+                "This tool lets you export metadata (title, artist, album) from MP3 files\n"
+                "into a CSV file, or import metadata from a CSV file to update MP3 tags.\n\n"
+                "Examples:\n"
+                "  mp3meta export --folder ./music --csv metadata.csv\n"
+                "  mp3meta import --folder ./music --csv metadata.csv"
+                ),
+            formatter_class=RawTextHelpFormatter
+            )
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     # Export command
@@ -89,3 +80,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
