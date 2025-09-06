@@ -1,0 +1,2 @@
+[console_scripts]
+mp3tagger = mp3tagger.__main__:main

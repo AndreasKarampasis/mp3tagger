@@ -1,0 +1,11 @@
+LICENSE
+README.md
+setup.py
+mp3meta.egg-info/PKG-INFO
+mp3meta.egg-info/SOURCES.txt
+mp3meta.egg-info/dependency_links.txt
+mp3meta.egg-info/entry_points.txt
+mp3meta.egg-info/requires.txt
+mp3meta.egg-info/top_level.txt
+mp3tagger/__init__.py
+mp3tagger/__main__.py
