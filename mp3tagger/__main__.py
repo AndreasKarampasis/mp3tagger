@@ -11,13 +11,14 @@ def export_metadata(folder_path, output_csv):
     mp3_files = list_mp3_files(folder_path)
     with open(output_csv, mode="w", newline='', encoding="utf-8") as f:
         writer = csv.writer(f)
-        writer.writerow(["filename", "title", "artist", "album"])
+        writer.writerow(["filename", "tracknumber", "title", "artist", "album"])
         for filename in mp3_files:
             filepath = os.path.join(folder_path, filename)
             try:
                 audio = EasyID3(filepath)
                 writer.writerow([
                     filename,
+                    audio.get("tracknumber", [""])[0],
                     audio.get("title", [""])[0],
                     audio.get("artist", [""])[0],
                     audio.get("album", [""])[0]
@@ -38,6 +39,7 @@ def import_metadata(folder_path, input_csv):
                 continue
             try:
                 audio = EasyID3(filepath)
+                audio["tracknumber"] = row["tracknumber"]
                 audio["title"] = row["title"]
                 audio["artist"] = row["artist"]
                 audio["album"] = row["album"]
